@@ -2,9 +2,9 @@
 
 Bergdahl.Growcube.Client
 
-A modern, fully asynchronous .NET client for the Elho GrowCube, based on a reverse-engineered TCP protocol.
+A modern, fully asynchronous .NET client for the Elecrow GrowCube, based on a reverse-engineered TCP protocol.
 
-This library is domain-driven, event-based, and designed for long-running services, Home Assistant integrations, and automation scenarios.
+This library is domain-driven, event-based, and designed for long-running services and automation scenarios.
 
 .NET 8
 
