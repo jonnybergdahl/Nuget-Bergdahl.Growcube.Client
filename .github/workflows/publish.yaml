@@ -1,0 +1,49 @@
+name: Publish NuGet
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    # Required for Trusted Publishing (OIDC)
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      # Derive version from tag: v1.2.3 -> 1.2.3
+      - name: Pack
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          dotnet pack src/Bergdahl.Growcube.Client/Bergdahl.Growcube.Client.csproj \
+            -c Release --no-build \
+            -p:PackageVersion=$VERSION \
+            -o ./artifacts
+
+      # Trusted Publishing login (OIDC -> temporary API key)
+      - name: NuGet login (Trusted Publishing)
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_USERNAME }}
+
+      - name: Push to nuget.org
+        run: dotnet nuget push "./artifacts/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget-login.outputs.nuget-api-key }}"

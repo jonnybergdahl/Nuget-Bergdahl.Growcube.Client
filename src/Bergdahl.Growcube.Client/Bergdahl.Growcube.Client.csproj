@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+        <!-- NuGet package metadata -->
+        <IsPackable>true</IsPackable>
+        <PackageId>Bergdahl.Growcube.Client</PackageId>
+        <Authors>Jonny Bergdahl</Authors>
+        <Company>Bergdahl IT AB</Company>
+        <Description>A .NET client for the Elecrow GrowCube.</Description>
+        <PackageTags>growcube</PackageTags>
+
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/jonnybergdahl/Nuget-Bergdahl.Growcube.Client</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/jonnybergdahl/Nuget-Bergdahl.Growcube.Client</PackageProjectUrl>
+
+        <!-- Show README on nuget.org -->
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+
+        <!-- SourceLink -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+        <!-- Symbols (.snupkg) -->
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- SourceLink for GitHub -->
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Ensure the repo-root README.md is packed -->
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>Bergdahl.Growcube.Client.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+    
+</Project>
