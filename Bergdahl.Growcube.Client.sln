@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7B6ED7D9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bergdahl.Growcube.Client.Tests", "tests\Bergdahl.Growcube.Client.Tests\Bergdahl.Growcube.Client.Tests.csproj", "{B00D2D4A-E391-4E0D-8164-BA9F310BD7AB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{32EB4D3C-8E69-49CC-BFAD-89CA389DEEE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bergdahl.Growcube.Client.Sample", "src\Bergdahl.Growcube.Client.Sample\Bergdahl.Growcube.Client.Sample.csproj", "{EECD590D-5F2F-4BB9-80DB-BD11E19A5209}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,13 @@ Global
 		{B00D2D4A-E391-4E0D-8164-BA9F310BD7AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B00D2D4A-E391-4E0D-8164-BA9F310BD7AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B00D2D4A-E391-4E0D-8164-BA9F310BD7AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EECD590D-5F2F-4BB9-80DB-BD11E19A5209}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EECD590D-5F2F-4BB9-80DB-BD11E19A5209}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EECD590D-5F2F-4BB9-80DB-BD11E19A5209}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EECD590D-5F2F-4BB9-80DB-BD11E19A5209}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B00D2D4A-E391-4E0D-8164-BA9F310BD7AB} = {7B6ED7D9-16B3-4DDD-942C-0E078F83C5B9}
+		{EECD590D-5F2F-4BB9-80DB-BD11E19A5209} = {32EB4D3C-8E69-49CC-BFAD-89CA389DEEE4}
 	EndGlobalSection
 EndGlobal
