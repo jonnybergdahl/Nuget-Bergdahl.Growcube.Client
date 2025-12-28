@@ -10,11 +10,11 @@
         <!-- NuGet package metadata -->
         <IsPackable>true</IsPackable>
         <PackageId>Bergdahl.Growcube.Client</PackageId>
+        <Version>1.0.0</Version>
         <Authors>Jonny Bergdahl</Authors>
         <Company>Bergdahl IT AB</Company>
         <Description>A .NET client for the Elecrow GrowCube.</Description>
         <PackageTags>growcube</PackageTags>
-
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/jonnybergdahl/Nuget-Bergdahl.Growcube.Client</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

@@ -2,8 +2,16 @@
 
 namespace Bergdahl.Growcube.Client.Curve;
 
+/// <summary>
+/// Represents a single point in a curve.
+/// </summary>
+/// <param name="Timestamp">The timestamp of the point.</param>
+/// <param name="Value">The value of the point.</param>
 public sealed record CurvePoint(DateTimeOffset Timestamp, int Value);
 
+/// <summary>
+/// Extension methods for curve data.
+/// </summary>
 public static class CurveDataExtensions
 {
     /// <summary>

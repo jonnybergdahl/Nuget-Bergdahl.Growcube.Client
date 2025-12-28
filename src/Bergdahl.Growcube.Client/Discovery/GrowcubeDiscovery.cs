@@ -4,8 +4,18 @@ using System.Text;
 
 namespace Bergdahl.Growcube.Client.Discovery;
 
+/// <summary>
+/// Provides methods to discover Growcube devices on the network.
+/// </summary>
 public static class GrowcubeDiscovery
 {
+    /// <summary>
+    /// Discovers Growcube devices within a given CIDR range.
+    /// </summary>
+    /// <param name="cidr">The CIDR range to scan (e.g., "192.168.1.0/24").</param>
+    /// <param name="timeoutPerHost">The timeout for each host being scanned.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A list of IP addresses of discovered Growcube devices.</returns>
     public static async Task<IReadOnlyList<IPAddress>> DiscoverAsync(
         string cidr,
         TimeSpan timeoutPerHost,

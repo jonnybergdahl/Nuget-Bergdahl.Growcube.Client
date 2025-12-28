@@ -2,16 +2,27 @@
 
 namespace Bergdahl.Growcube.Client.Protocol;
 
+/// <summary>
+/// A parser for decoding Growcube data frames from a byte stream.
+/// </summary>
 public sealed class GrowcubeFrameParser
 {
     private readonly List<byte> _buffer = new();
 
+    /// <summary>
+    /// Appends new data to the internal buffer for parsing.
+    /// </summary>
+    /// <param name="data">The data to append.</param>
     public void Append(ReadOnlySpan<byte> data)
     {
         if (data.Length == 0) return;
         _buffer.AddRange(data.ToArray());
     }
 
+    /// <summary>
+    /// Drains all completely parsed frames from the internal buffer.
+    /// </summary>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="GrowcubeFrame"/>.</returns>
     public IEnumerable<GrowcubeFrame> Drain()
     {
         while (true)

@@ -8,20 +8,71 @@ using Bergdahl.Growcube.Client.Protocol;
 
 namespace Bergdahl.Growcube.Client;
 
+/// <summary>
+/// Interface for the Growcube client.
+/// </summary>
 public interface IGrowcubeClient : IAsyncDisposable
 {
+    /// <summary>
+    /// Gets a value indicating whether the client is connected to the Growcube.
+    /// </summary>
     bool IsConnected { get; }
 
+    /// <summary>
+    /// Connects to the Growcube asynchronously.
+    /// </summary>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask ConnectAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Disconnects from the Growcube asynchronously.
+    /// </summary>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask DisconnectAsync(CancellationToken ct = default);
 
+    /// <summary>
+    /// Starts listening for events from the Growcube.
+    /// </summary>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>An <see cref="IAsyncEnumerable{T}"/> of <see cref="GrowcubeEvent"/>.</returns>
     IAsyncEnumerable<GrowcubeEvent> ListenAsync(CancellationToken ct = default);
 
+    /// <summary>
+    /// Synchronizes the time on the Growcube.
+    /// </summary>
+    /// <param name="now">The current time. Defaults to <see cref="DateTimeOffset.Now"/>.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask SyncTimeAsync(DateTimeOffset? now = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Sets the work mode of the Growcube.
+    /// </summary>
+    /// <param name="mode">The work mode.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask SetWorkModeAsync(GrowcubeWorkMode mode, CancellationToken ct = default);
 
+    /// <summary>
+    /// Waters a channel for a specified duration.
+    /// </summary>
+    /// <param name="channel">The channel to water.</param>
+    /// <param name="duration">The duration of watering.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask WaterAsync(GrowcubeChannel channel, TimeSpan duration, CancellationToken ct = default);
 
+    /// <summary>
+    /// Sets smart watering parameters for a channel.
+    /// </summary>
+    /// <param name="channel">The channel.</param>
+    /// <param name="minMoisture">The minimum moisture percentage to trigger watering.</param>
+    /// <param name="maxMoisture">The maximum moisture percentage to stop watering.</param>
+    /// <param name="allowDaylight">Whether watering is allowed during daylight hours.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask SetSmartWateringAsync(
         GrowcubeChannel channel,
         int minMoisture,
@@ -29,22 +80,53 @@ public interface IGrowcubeClient : IAsyncDisposable
         bool allowDaylight,
         CancellationToken ct = default);
 
+    /// <summary>
+    /// Sets a scheduled watering for a channel.
+    /// </summary>
+    /// <param name="channel">The channel.</param>
+    /// <param name="duration">The duration of watering.</param>
+    /// <param name="interval">The interval between watering sessions.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask SetScheduledWateringAsync(
         GrowcubeChannel channel,
         TimeSpan duration,
         TimeSpan interval,
         CancellationToken ct = default);
 
+    /// <summary>
+    /// Disables watering for a channel.
+    /// </summary>
+    /// <param name="channel">The channel.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask DisableWateringAsync(GrowcubeChannel channel, CancellationToken ct = default);
 
+    /// <summary>
+    /// Configures the WiFi settings for the Growcube.
+    /// </summary>
+    /// <param name="ssid">The WiFi SSID.</param>
+    /// <param name="password">The WiFi password.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     ValueTask SetWifiAsync(string ssid, string password, CancellationToken ct = default);
     
+    /// <summary>
+    /// Retrieves historic curve data for a channel.
+    /// </summary>
+    /// <param name="channel">The channel.</param>
+    /// <param name="timeout">The maximum time to wait for the data collection.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A list of curve data events.</returns>
     ValueTask<IReadOnlyList<CurveDataEvent>> GetCurveDataAsync(
         GrowcubeChannel channel,
         TimeSpan timeout,
         CancellationToken ct = default);    
 }
 
+/// <summary>
+/// A client for interacting with the Growcube device.
+/// </summary>
 public sealed class GrowcubeClient : IGrowcubeClient
 {
     private readonly Channel<GrowcubeEvent> _events =
@@ -69,13 +151,19 @@ public sealed class GrowcubeClient : IGrowcubeClient
     
     private readonly bool[] _pumpOpenByChannel = new bool[4];
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GrowcubeClient"/> class.
+    /// </summary>
+    /// <param name="options">The client configuration options.</param>
     public GrowcubeClient(GrowcubeClientOptions options)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
+    /// <inheritdoc />
     public bool IsConnected => _tcp is not null && _tcp.Connected;
 
+    /// <inheritdoc />
     public async ValueTask ConnectAsync(CancellationToken ct = default)
     {
         if (_tcp is not null)
@@ -97,6 +185,7 @@ public sealed class GrowcubeClient : IGrowcubeClient
             await SyncTimeAsync(DateTimeOffset.Now, ct).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async ValueTask DisconnectAsync(CancellationToken ct = default)
     {
         _loopCts?.Cancel();
@@ -138,16 +227,19 @@ public sealed class GrowcubeClient : IGrowcubeClient
         _readLoop = null;
     }
 
+    /// <inheritdoc />
     public async ValueTask SyncTimeAsync(DateTimeOffset? now = null, CancellationToken ct = default)
     {
         await SendAsync(InternalCommands.SyncTime(now ?? DateTimeOffset.Now), ct).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async ValueTask SetWorkModeAsync(GrowcubeWorkMode mode, CancellationToken ct = default)
     {
         await SendAsync(InternalCommands.SetWorkMode(mode), ct).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async ValueTask WaterAsync(GrowcubeChannel channel, TimeSpan duration, CancellationToken ct = default)
     {
         if (duration <= TimeSpan.Zero)
@@ -167,6 +259,7 @@ public sealed class GrowcubeClient : IGrowcubeClient
         }
     }
 
+    /// <inheritdoc />
     public async ValueTask SetSmartWateringAsync(
         GrowcubeChannel channel,
         int minMoisture,
@@ -188,6 +281,7 @@ public sealed class GrowcubeClient : IGrowcubeClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async ValueTask SetScheduledWateringAsync(
         GrowcubeChannel channel,
         TimeSpan duration,
@@ -213,17 +307,20 @@ public sealed class GrowcubeClient : IGrowcubeClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async ValueTask DisableWateringAsync(GrowcubeChannel channel, CancellationToken ct = default)
     {
         await SendAsync(InternalCommands.ClosePump(channel), ct).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async ValueTask SetWifiAsync(string ssid, string password, CancellationToken ct = default)
     {
         var ms = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         await SendAsync(InternalCommands.WifiSettings(ssid, password, ms), ct).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async IAsyncEnumerable<GrowcubeEvent> ListenAsync([EnumeratorCancellation] CancellationToken ct = default)
     {
         while (await _events.Reader.WaitToReadAsync(ct).ConfigureAwait(false))
@@ -231,6 +328,7 @@ public sealed class GrowcubeClient : IGrowcubeClient
             yield return ev;
     }
 
+    /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
         await DisconnectAsync().ConfigureAwait(false);
@@ -292,6 +390,7 @@ public sealed class GrowcubeClient : IGrowcubeClient
         }
     }
     
+    /// <inheritdoc />
     public async ValueTask<IReadOnlyList<CurveDataEvent>> GetCurveDataAsync(
         GrowcubeChannel channel,
         TimeSpan timeout,
